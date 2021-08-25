@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "122620513050",
+    "project_id": "floss-threads-accounting",
+    "storage_bucket": "floss-threads-accounting.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:122620513050:android:77f94301d7b2d73987faa3",
+        "android_client_info": {
+          "package_name": "com.kos.crossstich"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "122620513050-bgkkum06t982j4otenboid66mesala5k.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCBw1V_5eguDYp8H-9rGpMPUcC7NtkGnfc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "122620513050-bgkkum06t982j4otenboid66mesala5k.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
