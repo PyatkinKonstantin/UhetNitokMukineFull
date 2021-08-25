@@ -32,7 +32,7 @@ import java.util.ArrayList;
 
 import static com.kos.crossstich.adapters.StitchAdapter.stitchName;
 
-//v2.1 Full
+//v2.1 Full //
 public class MainActivity extends AppCompatActivity {
     Trial trialClass = new Trial();
     static String endOfTrial;
