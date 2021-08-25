@@ -54,7 +54,6 @@ public class SaveManager implements SaveLoad {
     private Context context;
     DbManager dbManager;
 
-    //Save manager
     public SaveManager(Context context) {
         this.context = context;
         dbManager = new DbManager(context);
