@@ -76,7 +76,7 @@ public class SaveManager implements SaveLoad {
     String CURRENT_THREADS = "current_threads";
     String ALL_THREADS = "all_threads";
     String FABRIC = "fabric";
-    String CUTS = "cuts";
+    String CUTS = "cuts"; //
 
     public void reciveArrays() {
         stitches = (ArrayList<StitchItem>) dbManager.getStitchFromDb();
