@@ -22,14 +22,13 @@ import com.kos.crossstich.items.NitNew;
 import com.kos.crossstich.adapters.ThreadsAdapter;
 import com.kos.crossstich.db.Constants;
 import com.kos.crossstich.db.DbManager;
-import com.kos.util.SaveLoad;
-import com.kos.util.SaveManager;
 
 
 import java.util.ArrayList;
 
-public class ThreadsActivity extends AppCompatActivity {
+import static com.kos.crossstich.db.Constants.PASM_6;
 
+public class ThreadsActivity extends AppCompatActivity {
     ArrayList<NitNew> nitNewArrayList;
     DbManager dbManager;
     RecyclerView rv_rightActivity;
@@ -37,6 +36,7 @@ public class ThreadsActivity extends AppCompatActivity {
 
     public static TextView tv_dialogThreadName;
     public TextView tv_sort_thread;
+    public TextView tv_pasm;
     public ImageButton bt_dialog_minus;
     public EditText et_dialogAdd;
     public ImageButton bt_dialog_plus;
@@ -84,23 +84,22 @@ public class ThreadsActivity extends AppCompatActivity {
         threadsAdapter.updateThreadsAdapter(listForThreadAdapter());
 
 
-
         ArrayList<NitNew> temp = new ArrayList<>();
         if (in_stock != null) {
             in_stock.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                 @Override
                 public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                    if (isChecked){
-                        ArrayList<NitNew> list = (ArrayList<NitNew>) dbManager.getAllThredsOfFirmFromDb(in_stock.isChecked(),firma, Constants.SORT_ASC);
+                    if (isChecked) {
+                        ArrayList<NitNew> list = (ArrayList<NitNew>) dbManager.getAllThredsOfFirmFromDb(in_stock.isChecked(), firma, Constants.SORT_ASC);
                         temp.clear();
-                        for (NitNew item : list){
-                            if (item.getLengthOstatok()>0){
+                        for (NitNew item : list) {
+                            if (item.getLengthOstatok() > 0) {
                                 temp.add(item);
                             }
                         }
                         threadsAdapter.updateThreadsAdapter(temp);
-                    }else {
-                        ArrayList<NitNew> list = (ArrayList<NitNew>) dbManager.getAllThredsOfFirmFromDb(in_stock.isChecked(),firma, Constants.SORT_ASC);
+                    } else {
+                        ArrayList<NitNew> list = (ArrayList<NitNew>) dbManager.getAllThredsOfFirmFromDb(in_stock.isChecked(), firma, Constants.SORT_ASC);
                         threadsAdapter.updateThreadsAdapter(list);
                     }
 
@@ -110,6 +109,7 @@ public class ThreadsActivity extends AppCompatActivity {
 
 
     }
+
     @Override
     protected void onDestroy() {
         super.onDestroy();
@@ -125,6 +125,11 @@ public class ThreadsActivity extends AppCompatActivity {
         bt_dialog_minus = dialogAddThread.findViewById(R.id.bt_dialog_minus);
 
         in_stock = findViewById(R.id.in_stock);
+        tv_pasm = findViewById(R.id.tv_pasm);
+        if (PASM_6==1){
+            tv_pasm.setText("Метр, в 6 нитей");
+        }else tv_pasm.setText("Метр, в 1 нить");
+
 
 
         bt_dmc = findViewById(R.id.bt_dmc);
@@ -235,12 +240,12 @@ public class ThreadsActivity extends AppCompatActivity {
 
                 String text = et_dialogAdd.getText().toString();
 
-                    int last = text.length() - 1;
-                    Log.d("my",""+last);
-                    if (last>-1) {
-                        String textDel = text.substring(0, last);
-                        et_dialogAdd.setText(textDel);
-                    }
+                int last = text.length() - 1;
+                Log.d("my", "" + last);
+                if (last > -1) {
+                    String textDel = text.substring(0, last);
+                    et_dialogAdd.setText(textDel);
+                }
             }
         });
     }
@@ -328,27 +333,40 @@ public class ThreadsActivity extends AppCompatActivity {
     }
 
     public void addNit(View view) {
+        Double oldVal = Double.parseDouble(oldValue.replace(",", "."));
         String valueStr = et_dialogAdd.getText().toString();
+        Double addValueDouble = Double.parseDouble(valueStr);
         if (valueStr.length() == 0) {
             Toast.makeText(this, "Не введена длина", Toast.LENGTH_SHORT).show();
         } else {
 
-            Double value = Double.parseDouble(oldValue.replace(",",".")) + Double.parseDouble(valueStr);
+            addValueDouble = addValueDouble / PASM_6;
+            oldVal = Double.parseDouble(oldValue.replace(",", ".")) / PASM_6;
+
+
+            Double value = oldVal + addValueDouble;
             dbManager.updateThreadOstatokToDb(value, idToChange);
-            threadsAdapter.updateThreadsAdapter(dbManager.getAllThredsOfFirmFromDb(in_stock.isChecked(),firma, Constants.SORT_ASC));
+            threadsAdapter.updateThreadsAdapter(dbManager.getAllThredsOfFirmFromDb(in_stock.isChecked(), firma, Constants.SORT_ASC));
             dialogAddThread.dismiss();
             et_dialogAdd.setText("");
         }
     }
 
     public void removeNit(View view) {
+        Double oldVal = Double.parseDouble(oldValue.replace(",", "."));
         String valueStr = et_dialogAdd.getText().toString();
+        Double addValueDouble = Double.parseDouble(valueStr);
         if (valueStr.length() == 0) {
             Toast.makeText(this, "Не введена длина", Toast.LENGTH_SHORT).show();
         } else {
-            Double value = Double.parseDouble(oldValue.replace(",",".")) - Double.parseDouble(valueStr);
+
+            addValueDouble = addValueDouble / PASM_6;
+            oldVal = Double.parseDouble(oldValue.replace(",", ".")) / PASM_6;
+
+
+            Double value = oldVal - addValueDouble;
             dbManager.updateThreadOstatokToDb(value, idToChange);
-            threadsAdapter.updateThreadsAdapter(dbManager.getAllThredsOfFirmFromDb(in_stock.isChecked(),firma, Constants.SORT_ASC));
+            threadsAdapter.updateThreadsAdapter(dbManager.getAllThredsOfFirmFromDb(in_stock.isChecked(), firma, Constants.SORT_ASC));
             dialogAddThread.dismiss();
             et_dialogAdd.setText("");
         }
@@ -358,18 +376,18 @@ public class ThreadsActivity extends AppCompatActivity {
         String sort = Constants.SORT_ASC;
         threadsAdapter.updateThreadsAdapter(dbManager.getSortByNalichieThreadFromDb(firma, sort));
     }*/
-    ArrayList<NitNew> listForThreadAdapter(){
-        ArrayList<NitNew> list = (ArrayList<NitNew>) dbManager.getAllThredsOfFirmFromDb(in_stock.isChecked(),firma, Constants.SORT_ASC);
+    ArrayList<NitNew> listForThreadAdapter() {
+        ArrayList<NitNew> list = (ArrayList<NitNew>) dbManager.getAllThredsOfFirmFromDb(in_stock.isChecked(), firma, Constants.SORT_ASC);
         ArrayList<NitNew> temp = new ArrayList<>();
-        for (NitNew item : list){
-            if (item.getLengthOstatok()>0){
+        for (NitNew item : list) {
+            if (item.getLengthOstatok() > 0) {
                 temp.add(item);
             }
         }
 
-        if (in_stock.isChecked()){
+        if (in_stock.isChecked()) {
             return temp;
-        }else {
+        } else {
             return list;
         }
 

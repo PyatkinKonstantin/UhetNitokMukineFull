@@ -34,6 +34,7 @@ import static com.kos.crossstich.adapters.CurrentThreadsApapter.currentThreadId;
 import static com.kos.crossstich.adapters.CurrentThreadsApapter.currentThreadLength;
 import static com.kos.crossstich.adapters.CurrentThreadsApapter.currentThreadNumberNit;
 import static com.kos.crossstich.adapters.CurrentThreadsApapter.currentThreadfirm;
+import static com.kos.crossstich.db.Constants.PASM_6;
 
 public class CurrentActivity extends AppCompatActivity {
     ArrayList<String> threadsListForSpinner;
@@ -160,6 +161,9 @@ public class CurrentActivity extends AppCompatActivity {
         String len = et_dialog_current_length.getText().toString();
         if (len.length() > 0) {
             Double lengthCurrent = Double.parseDouble(len);
+
+                lengthCurrent = lengthCurrent/PASM_6;
+
 
             int colorNumber = dbManager.searchColorNumberFromDb(numberNit, firm);
 

@@ -24,6 +24,7 @@ public class DbHelper extends SQLiteOpenHelper {
         ContentValues contentValues = new ContentValues();
         contentValues.put(Constants.KOL_ZAP, "0");
         contentValues.put(Constants.FIRST_START, 0);
+        contentValues.put(Constants.PASM, 1);
         db.insert(Constants.TABLE_SET, null, contentValues);
 
     }
@@ -36,6 +37,8 @@ public class DbHelper extends SQLiteOpenHelper {
         db.execSQL(Constants.DROP_TABLE_FABRIC);
         db.execSQL(Constants.DROP_TABLE_CUT_FABRIC);
         db.execSQL(Constants.DROP_TABLE_SET);
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(Constants.PASM, 1);
         onCreate(db);
     }
 }

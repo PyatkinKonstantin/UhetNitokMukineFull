@@ -155,7 +155,7 @@
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_marginLeft="0dp"
-        android:layout_marginTop="30dp"
+        android:layout_marginTop="50dp"
         android:layout_marginRight="0dp"
         android:layout_marginBottom="0dp"
         android:isScrollContainer="true"
@@ -188,6 +188,17 @@
         android:text="@string/in_stock"
         app:layout_constraintEnd_toStartOf="@+id/bt_home_threads"
         app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/tv_pasm"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        android:layout_marginEnd="40dp"
+        android:text="мот.в 6н."
+        android:textSize="10dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/horizontalScrollView2" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
