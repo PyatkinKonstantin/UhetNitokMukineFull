@@ -53,7 +53,8 @@ public class ThreadsAdapter extends RecyclerView.Adapter<ThreadsAdapter.ThreadsH
 
         //Остаток длина
         Double length = nitNewNewArrayList.get(position).getLengthOstatok();
-        String lengthOstatok = String.valueOf(length);
+        //String lengthOstatok = String.valueOf(length);
+        String lengthOstatok = String.format("%.2f", length);
         holder.tv_itemThreadsActivityLength.setText(lengthOstatok);
 
         if (length > 4) {

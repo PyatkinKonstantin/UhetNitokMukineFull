@@ -332,7 +332,8 @@ public class ThreadsActivity extends AppCompatActivity {
         if (valueStr.length() == 0) {
             Toast.makeText(this, "Не введена длина", Toast.LENGTH_SHORT).show();
         } else {
-            Double value = Double.valueOf(oldValue) + Double.parseDouble(valueStr);
+
+            Double value = Double.parseDouble(oldValue.replace(",",".")) + Double.parseDouble(valueStr);
             dbManager.updateThreadOstatokToDb(value, idToChange);
             threadsAdapter.updateThreadsAdapter(dbManager.getAllThredsOfFirmFromDb(in_stock.isChecked(),firma, Constants.SORT_ASC));
             dialogAddThread.dismiss();
@@ -345,7 +346,7 @@ public class ThreadsActivity extends AppCompatActivity {
         if (valueStr.length() == 0) {
             Toast.makeText(this, "Не введена длина", Toast.LENGTH_SHORT).show();
         } else {
-            Double value = Double.valueOf(oldValue) - Double.parseDouble(valueStr);
+            Double value = Double.parseDouble(oldValue.replace(",",".")) - Double.parseDouble(valueStr);
             dbManager.updateThreadOstatokToDb(value, idToChange);
             threadsAdapter.updateThreadsAdapter(dbManager.getAllThredsOfFirmFromDb(in_stock.isChecked(),firma, Constants.SORT_ASC));
             dialogAddThread.dismiss();
