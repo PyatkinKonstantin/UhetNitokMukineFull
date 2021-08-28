@@ -633,6 +633,7 @@
     <string name="save_to_device">Сохранить.</string>
     <string name="loadingPleaseWait">Загрузка... Пожалуйста, подождите.</string>
     <string name="setup">Настройки</string>
+    <string name="savingPleaseWait">Сохранение... Пожалуйста, подождите.</string>
 
 
 </resources>

@@ -1036,6 +1036,7 @@
     <string name="save_to_device">Save</string>
     <string name="loadingPleaseWait">Loading... Please wait.</string>
     <string name="setup">Setup</string>
+    <string name="savingPleaseWait">Saving... Please wait.</string>
 
 
 </resources>

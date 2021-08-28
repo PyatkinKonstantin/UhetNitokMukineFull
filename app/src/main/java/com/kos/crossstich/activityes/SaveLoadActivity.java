@@ -34,6 +34,7 @@ import com.squareup.picasso.Picasso;
 
 public class SaveLoadActivity extends AppCompatActivity {
     public static Dialog dialogLoading;
+    public static Dialog dialogSaving;
     TextView tv_user_name;
     ImageView googleAccountLPicture;
 
@@ -58,6 +59,8 @@ public class SaveLoadActivity extends AppCompatActivity {
 
         dialogLoading = new Dialog(this);
         dialogLoading.setContentView(R.layout.dialog_loading_in_progress);
+        dialogSaving = new Dialog(this);
+        dialogSaving.setContentView(R.layout.dialog_saving_in_progress);
         tv_user_name = findViewById(R.id.tv_user_name);
         googleAccountLPicture = findViewById(R.id.googleAccountLPicture);
 
@@ -169,9 +172,9 @@ public class SaveLoadActivity extends AppCompatActivity {
 
 
     public void saveToDevic(View view) {
+        dialogSaving.show();
         SaveLoad save = new SaveManager(this);
         save.saveToDevice(this, isStoragePermissionGrantedRead());
-        Toast.makeText(this, "Сохранено", Toast.LENGTH_SHORT).show();
     }
 
     public void loadFromDevic(View view) {
@@ -184,12 +187,6 @@ public class SaveLoadActivity extends AppCompatActivity {
                 finish();
             }
         }).start();
-    }
-
-    public void saveToFBase(View view) {
-        SaveLoad save = new SaveManager(this);
-        save.saveToFireBase();
-        Toast.makeText(this, "Сохранено", Toast.LENGTH_SHORT).show();
     }
 
     public void loadFromFBase(View view) {

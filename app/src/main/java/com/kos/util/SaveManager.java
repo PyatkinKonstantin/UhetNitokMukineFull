@@ -43,6 +43,7 @@ import java.net.URL;
 import java.util.ArrayList;
 
 import static com.kos.crossstich.activityes.SaveLoadActivity.dialogLoading;
+import static com.kos.crossstich.activityes.SaveLoadActivity.dialogSaving;
 
 public class SaveManager implements SaveLoad {
     File tempfile;
@@ -208,7 +209,7 @@ public class SaveManager implements SaveLoad {
             public void onDataChange(DataSnapshot dataSnapshot) {
                 str = dataSnapshot.child(SAVE).getValue(String.class);
                 Log.d("my", "ras");
-                Log.d("my", str);
+               // Log.d("my", str);
                 Log.d("my", "dva");
                 httpReference = FirebaseStorage.getInstance().getReferenceFromUrl(str);
                 Log.d("my", "tri");
@@ -224,7 +225,7 @@ public class SaveManager implements SaveLoad {
                 }).addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
-
+                        Toast.makeText(context, "Ошибка сети. Повторите попытку загрузки.", Toast.LENGTH_LONG).show();
                     }
                 });
             }
@@ -417,6 +418,14 @@ public class SaveManager implements SaveLoad {
                 mDatabase.child(SAVE).setValue(str);
                 //Log.d("my", upLoadUri.toString());
                 mDatabase.child(SAVE).setValue(upLoadUri.toString());
+                Toast.makeText(context, "Сохранено", Toast.LENGTH_SHORT).show();
+                dialogSaving.dismiss();
+            }
+
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Toast.makeText(context, "Ошибка сети. Повторите попытку сохранения", Toast.LENGTH_LONG).show();
             }
         });
     }
