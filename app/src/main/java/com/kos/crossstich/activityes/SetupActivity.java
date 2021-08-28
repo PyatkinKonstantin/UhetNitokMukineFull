@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 
@@ -61,5 +62,9 @@ public class SetupActivity extends AppCompatActivity {
                 }
             }
         });
+    }
+
+    public void onClickHomeFromSetup(View view) {
+        finish();
     }
 }

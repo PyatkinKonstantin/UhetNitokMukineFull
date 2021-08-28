@@ -196,12 +196,12 @@ public class CurrentActivity extends AppCompatActivity {
     }
 
     private void resetFirmButtonColor() {
-        bt_dialog_current_dmc.setBackgroundColor(Color.WHITE);
-        bt_dialog_current_cxc.setBackgroundColor(Color.WHITE);
-        bt_dialog_current_pnk.setBackgroundColor(Color.WHITE);
-        bt_dialog_current_gamma.setBackgroundColor(Color.WHITE);
-        bt_dialog_current_anchor.setBackgroundColor(Color.WHITE);
-        bt_dialog_current_kreinik.setBackgroundColor(Color.WHITE);
+        bt_dialog_current_dmc.setBackgroundColor(Color.TRANSPARENT);
+        bt_dialog_current_cxc.setBackgroundColor(Color.TRANSPARENT);
+        bt_dialog_current_pnk.setBackgroundColor(Color.TRANSPARENT);
+        bt_dialog_current_gamma.setBackgroundColor(Color.TRANSPARENT);
+        bt_dialog_current_anchor.setBackgroundColor(Color.TRANSPARENT);
+        bt_dialog_current_kreinik.setBackgroundColor(Color.TRANSPARENT);
     }
 
     public void onClickDMC(View view) {

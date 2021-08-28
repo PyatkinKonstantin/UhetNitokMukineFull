@@ -127,8 +127,8 @@ public class ThreadsActivity extends AppCompatActivity {
         in_stock = findViewById(R.id.in_stock);
         tv_pasm = findViewById(R.id.tv_pasm);
         if (PASM_6==1){
-            tv_pasm.setText("Метр, в 6 нитей");
-        }else tv_pasm.setText("Метр, в 1 нить");
+            tv_pasm.setText("Метр,в 6нит");
+        }else tv_pasm.setText("Метр,в 1нит");
 
 
 

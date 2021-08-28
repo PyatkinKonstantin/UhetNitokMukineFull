@@ -1035,6 +1035,7 @@
     <string name="load_from_cloud">Load from cloud</string>
     <string name="save_to_device">Save</string>
     <string name="loadingPleaseWait">Loading... Please wait.</string>
+    <string name="setup">Setup</string>
 
 
 </resources>
