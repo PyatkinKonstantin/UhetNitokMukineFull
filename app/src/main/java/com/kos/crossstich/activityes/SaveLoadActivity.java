@@ -11,6 +11,7 @@ import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -35,6 +36,9 @@ import com.squareup.picasso.Picasso;
 public class SaveLoadActivity extends AppCompatActivity {
     public static Dialog dialogLoading;
     public static Dialog dialogSaving;
+    public static Dialog dialogLoad;
+    Button bt_dialog_load_no;
+    Button bt_dialog_load_yes;
     TextView tv_user_name;
     ImageView googleAccountLPicture;
 
@@ -56,6 +60,24 @@ public class SaveLoadActivity extends AppCompatActivity {
         if (Build.VERSION.SDK_INT >= 30) {
             isStoragePermissionGrantedRead();
         }
+        dialogLoad = new Dialog(this);
+        dialogLoad.setContentView(R.layout.dialog_load);
+        bt_dialog_load_no = dialogLoad.findViewById(R.id.bt_dialog_load_no);
+        bt_dialog_load_yes = dialogLoad.findViewById(R.id.bt_dialog_load_yes);
+        bt_dialog_load_no.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialogLoad.dismiss();
+            }
+        });
+        bt_dialog_load_yes.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialogLoading.show();
+                SaveLoad load = new SaveManager(SaveLoadActivity.this);
+                load.loadFromFireBase(SaveLoadActivity.this,isStoragePermissionGrantedRead(),isStoragePermissionGrantedWrite());
+            }
+        });
 
         dialogLoading = new Dialog(this);
         dialogLoading.setContentView(R.layout.dialog_loading_in_progress);
@@ -174,7 +196,7 @@ public class SaveLoadActivity extends AppCompatActivity {
     public void saveToDevic(View view) {
         dialogSaving.show();
         SaveLoad save = new SaveManager(this);
-        save.saveToDevice(this, isStoragePermissionGrantedRead());
+        save.saveToDevice(this, isStoragePermissionGrantedRead(),isStoragePermissionGrantedWrite());
     }
 
     public void loadFromDevic(View view) {
@@ -183,16 +205,20 @@ public class SaveLoadActivity extends AppCompatActivity {
             @Override
             public void run() {
                 SaveLoad load = new SaveManager(getApplicationContext());
-                load.loadFromDevice(getApplicationContext(), isStoragePermissionGrantedRead());
+                load.loadFromDevice(getApplicationContext(), isStoragePermissionGrantedRead(),isStoragePermissionGrantedWrite());
                 finish();
             }
         }).start();
     }
 
-    public void loadFromFBase(View view) {
+    /*public void loadFromFBase(View view) {
         dialogLoading.show();
         SaveLoad load = new SaveManager(this);
-        load.loadFromFireBase(this,isStoragePermissionGrantedRead());
+        load.loadFromFireBase(this,isStoragePermissionGrantedRead(),isStoragePermissionGrantedWrite());
+    }*/
+
+    public void loadFromFBase(View view) {
+        dialogLoad.show();
     }
 
     public void onClickLogoff(View view) {

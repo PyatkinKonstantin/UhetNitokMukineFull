@@ -62,9 +62,9 @@
         android:layout_marginTop="5dp"
         android:padding="13dp"
         style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+        app:cornerRadius="10dp"
         app:icon="@drawable/menu"
         app:iconSize="25dp"
-        app:cornerRadius="10dp"
         android:onClick="onClickMenuDelete"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -86,8 +86,6 @@
         app:layout_constraintStart_toEndOf="@+id/but_menu"
         app:layout_constraintTop_toTopOf="parent" />
 
-
-
     <Button
         android:id="@+id/bt_home"
         android:layout_width="50dp"
@@ -96,9 +94,9 @@
         android:layout_marginTop="5dp"
         android:padding="13dp"
         style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+        app:cornerRadius="10dp"
         app:icon="@drawable/backfinal"
         app:iconSize="26dp"
-        app:cornerRadius="10dp"
         app:iconTint="#000000"
         android:onClick="onClickHome"
         app:layout_constraintEnd_toEndOf="parent"

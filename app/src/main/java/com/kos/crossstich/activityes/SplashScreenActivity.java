@@ -52,6 +52,13 @@ public class SplashScreenActivity extends Activity {
     }
 
     void init() {
+        if (Build.VERSION.SDK_INT <= 29) {
+            isStoragePermissionGrantedWrite();
+        }
+
+        if (Build.VERSION.SDK_INT >= 30) {
+            isStoragePermissionGrantedRead();
+        }
         logo_anim = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.alfa_anim);
         logo = findViewById(R.id.logo);
         logo.startAnimation(logo_anim);
@@ -3291,21 +3298,33 @@ public class SplashScreenActivity extends Activity {
         return col;
     }
 
-    public boolean isStoragePermissionGrantedRead() {
+    public boolean isStoragePermissionGrantedWrite() {
         if (Build.VERSION.SDK_INT >= 23) {
-            if (checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE)
-                    == PackageManager.PERMISSION_GRANTED) {
+            if (checkSelfPermission(android.Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
                 return true;
-
             } else {
-                ActivityCompat.requestPermissions(this,
-                        new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, 1);
+                ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 1);
                 return false;
             }
         } else { //permission is automatically granted on sdk<23 upon installation
             return true;
         }
     }
+
+    public boolean isStoragePermissionGrantedRead() {
+        if (Build.VERSION.SDK_INT >= 23) {
+            if (checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
+                return true;
+
+            } else {
+                ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, 1);
+                return false;
+            }
+        } else { //permission is automatically granted on sdk<23 upon installation
+            return true;
+        }
+    }
+
 
     public void loadOldFromApp() {
 

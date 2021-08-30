@@ -1022,7 +1022,7 @@
     <string name="loaded">Load Complete</string>
     <string name="in_stock">In stock</string>
     <string name="load_state">The load will overwrite the current state of the application.Load?</string>
-    <string name="loadText">Download from phone memory. Load the last saved application state</string>
+    <string name="loadText">Load from device</string>
     <string name="yes">Yes</string>
     <string name="No">No</string>
     <string name="pathOfSave">Save to cloud</string>

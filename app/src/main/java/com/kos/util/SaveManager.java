@@ -42,6 +42,7 @@ import java.net.URI;
 import java.net.URL;
 import java.util.ArrayList;
 
+import static com.kos.crossstich.activityes.SaveLoadActivity.dialogLoad;
 import static com.kos.crossstich.activityes.SaveLoadActivity.dialogLoading;
 import static com.kos.crossstich.activityes.SaveLoadActivity.dialogSaving;
 
@@ -89,11 +90,11 @@ public class SaveManager implements SaveLoad {
     }
 
 
-    public synchronized void loadUsingUrl(Context context, Boolean isStoragePermissionGrantedRead) {
+    public synchronized void loadUsingUrl(Context context, Boolean isStoragePermissionGrantedRead, Boolean isStoragePermissionGrantedWrite) {
 
         Log.d("my", "ok = " + ok);
 
-        if (isStoragePermissionGrantedRead) {
+        if (isStoragePermissionGrantedRead&&isStoragePermissionGrantedWrite) {
 
             Log.d("my", "--Loading--");
 
@@ -194,13 +195,12 @@ public class SaveManager implements SaveLoad {
             Log.d("my", "cuts size = " + cuts.size());
             Log.d("my", "--Load ok--");
             dialogLoading.dismiss();
+            dialogLoad.dismiss();
             Toast.makeText(context, context.getResources().getText(R.string.loaded), Toast.LENGTH_SHORT).show();
         }
-
-
     }
 
-    public void loadFromFireBase(Context context, Boolean isStoragePermissionGrantedRead) {
+    public void loadFromFireBase(Context context, Boolean isStoragePermissionGrantedRead, Boolean isStoragePermissionGrantedWrite) {
         tempfile = new File("/sdcard/documents/CrossStitchAccount/recover2.mp4");
         Log.d("my", "nol");
 
@@ -220,7 +220,7 @@ public class SaveManager implements SaveLoad {
                         ok = true;
                         Log.d("my", "ok = " + ok);
 
-                        loadUsingUrl(context, isStoragePermissionGrantedRead);
+                        loadUsingUrl(context, isStoragePermissionGrantedRead, isStoragePermissionGrantedWrite);
                     }
                 }).addOnFailureListener(new OnFailureListener() {
                     @Override
@@ -237,8 +237,8 @@ public class SaveManager implements SaveLoad {
         });
     }
 
-    public void saveToDevice(Context context, Boolean isStoragePermissionGrantedRead) {
-        if (isStoragePermissionGrantedRead) {
+    public void saveToDevice(Context context, Boolean isStoragePermissionGrantedRead, Boolean isStoragePermissionGrantedWrite) {
+        if (isStoragePermissionGrantedRead&&isStoragePermissionGrantedWrite) {
             Log.d("my", "--save--");
 
             File path = new File("/sdcard/documents/CrossStitchAccount");
@@ -289,8 +289,8 @@ public class SaveManager implements SaveLoad {
         }
     }
 
-    public void loadFromDevice(Context context, Boolean isStoragePermissionGrantedRead) {
-        if (isStoragePermissionGrantedRead) {
+    public void loadFromDevice(Context context, Boolean isStoragePermissionGrantedRead, Boolean isStoragePermissionGrantedWrite) {
+        if (isStoragePermissionGrantedRead&&isStoragePermissionGrantedWrite) {
             Log.d("my", "--Loading--");
             File file = new File("/sdcard/documents/CrossStitchAccount/recover.mp4");
             try {
