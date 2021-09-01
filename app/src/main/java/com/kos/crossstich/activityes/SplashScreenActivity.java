@@ -84,7 +84,6 @@ public class SplashScreenActivity extends Activity {
                     public void run() {
                         dbManager.openDb();
                         loadAllBase();
-                        loadOldFromApp();
                         dbManager.closeDb();
                         Intent mainIntent = new Intent(SplashScreenActivity.this, MainActivity.class);
                         SplashScreenActivity.this.startActivity(mainIntent);
@@ -3317,88 +3316,4 @@ public class SplashScreenActivity extends Activity {
             return true;
         }
     }
-
-
-    public void loadOldFromApp() {
-
-        ArrayList<Nit> recoveryNit = new ArrayList<>();
-        ArrayList<String> allCrossStich = new ArrayList<>();
-        ArrayList<Nit> allNits = new ArrayList<>();
-
-        String FILE_NAME = "saveCross";
-        Log.d("my", "tut");
-        File file = new File(getExternalFilesDir(null), FILE_NAME);
-
-        try {
-            FileInputStream fin = new FileInputStream(file);
-
-            ObjectInputStream ois = new ObjectInputStream(fin);
-            allCrossStich = (ArrayList<String>) ois.readObject();
-            allNits = (ArrayList<Nit>) ois.readObject();
-            recoveryNit = (ArrayList<Nit>) ois.readObject();
-            fin.close();
-            ois.close();
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-            Log.d("my", "--No file--");
-        } catch (IOException e) {
-            e.printStackTrace();
-            Log.d("my", "-IO error--");
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-            Log.d("my", "-Class Not Found--");
-        }
-        Log.d("my", "Stitch size = " + allCrossStich.size());
-        Log.d("my", "Current size = " + allNits.size());
-        Log.d("my", "Threads size = " + recoveryNit.size());
-
-        if (allCrossStich.size() > 0) {
-            for (String item : allCrossStich) {
-                dbManager.insertStitchToDb(item, "someText");
-            }
-        }
-
-        if (allNits.size() > 0) {
-            for (com.kos.crossstich.Nit it : allNits) {
-                String numberNit = it.numberNit;
-                String colorName = it.color;
-                String firm = it.firma;
-                String nameStitch = it.nameStich;
-                int colorNumber = dbManager.searchColorNumberFromDb(numberNit, firm);
-                double lengthCurrent = it.lengthCurrent;
-                dbManager.insertCurrenThreadToDb(numberNit, colorNumber, colorName, firm, nameStitch, lengthCurrent);
-            }
-        }
-
-        if (recoveryNit.size() > 0) {
-            for (int x = 0; x < 900; x++) {
-                String num = recoveryNit.get(x).numberNit;
-                String firm = recoveryNit.get(x).firma;
-                int id = dbManager.searchIdThreadFromDb(num, firm);
-                double lengthOstatok = recoveryNit.get(x).lengthOstatokt;
-                if (lengthOstatok > 0) {
-                    dbManager.updateThreadOstatokToDb(lengthOstatok, String.valueOf(id));
-                }
-            }
-            for (int x = 900; x < 1800; x++) {
-                String num = recoveryNit.get(x).numberNit;
-                String firm = recoveryNit.get(x).firma;
-                int id = dbManager.searchIdThreadFromDb(num, firm);
-                double lengthOstatok = recoveryNit.get(x).lengthOstatokt;
-                if (lengthOstatok > 0) {
-                    dbManager.updateThreadOstatokToDb(lengthOstatok, String.valueOf(id));
-                }
-            }
-            for (int x = 1800; x < recoveryNit.size(); x++) {
-                String num = recoveryNit.get(x).numberNit;
-                String firm = recoveryNit.get(x).firma;
-                int id = dbManager.searchIdThreadFromDb(num, firm);
-                double lengthOstatok = recoveryNit.get(x).lengthOstatokt;
-                if (lengthOstatok > 0) {
-                    dbManager.updateThreadOstatokToDb(lengthOstatok, String.valueOf(id));
-                }
-            }
-        }
-    }
-
 }

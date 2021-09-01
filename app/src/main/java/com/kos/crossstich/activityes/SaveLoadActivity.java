@@ -53,13 +53,6 @@ public class SaveLoadActivity extends AppCompatActivity {
         init();
     }
     void init(){
-        if (Build.VERSION.SDK_INT <= 29) {
-            isStoragePermissionGrantedWrite();
-        }
-
-        if (Build.VERSION.SDK_INT >= 30) {
-            isStoragePermissionGrantedRead();
-        }
         dialogLoad = new Dialog(this);
         dialogLoad.setContentView(R.layout.dialog_load);
         bt_dialog_load_no = dialogLoad.findViewById(R.id.bt_dialog_load_no);
@@ -75,7 +68,7 @@ public class SaveLoadActivity extends AppCompatActivity {
             public void onClick(View v) {
                 dialogLoading.show();
                 SaveLoad load = new SaveManager(SaveLoadActivity.this);
-                load.loadFromFireBase(SaveLoadActivity.this,isStoragePermissionGrantedRead());
+                load.loadFromFireBase(SaveLoadActivity.this);
             }
         });
 
@@ -196,7 +189,7 @@ public class SaveLoadActivity extends AppCompatActivity {
     public void saveToDevic(View view) {
         dialogSaving.show();
         SaveLoad save = new SaveManager(this);
-        save.saveToDevice(this, isStoragePermissionGrantedRead());
+        save.saveToDevice(this);
     }
 
     public void loadFromDevic(View view) {
@@ -205,17 +198,11 @@ public class SaveLoadActivity extends AppCompatActivity {
             @Override
             public void run() {
                 SaveLoad load = new SaveManager(getApplicationContext());
-                load.loadFromDevice(getApplicationContext(), isStoragePermissionGrantedRead());
+                load.loadFromDevice(getApplicationContext());
                 finish();
             }
         }).start();
     }
-
-    /*public void loadFromFBase(View view) {
-        dialogLoading.show();
-        SaveLoad load = new SaveManager(this);
-        load.loadFromFireBase(this,isStoragePermissionGrantedRead(),isStoragePermissionGrantedWrite());
-    }*/
 
     public void loadFromFBase(View view) {
         dialogLoad.show();
