@@ -75,7 +75,7 @@ public class SaveLoadActivity extends AppCompatActivity {
             public void onClick(View v) {
                 dialogLoading.show();
                 SaveLoad load = new SaveManager(SaveLoadActivity.this);
-                load.loadFromFireBase(SaveLoadActivity.this,isStoragePermissionGrantedRead(),isStoragePermissionGrantedWrite());
+                load.loadFromFireBase(SaveLoadActivity.this,isStoragePermissionGrantedRead());
             }
         });
 
@@ -196,7 +196,7 @@ public class SaveLoadActivity extends AppCompatActivity {
     public void saveToDevic(View view) {
         dialogSaving.show();
         SaveLoad save = new SaveManager(this);
-        save.saveToDevice(this, isStoragePermissionGrantedRead(),isStoragePermissionGrantedWrite());
+        save.saveToDevice(this, isStoragePermissionGrantedRead());
     }
 
     public void loadFromDevic(View view) {
@@ -205,7 +205,7 @@ public class SaveLoadActivity extends AppCompatActivity {
             @Override
             public void run() {
                 SaveLoad load = new SaveManager(getApplicationContext());
-                load.loadFromDevice(getApplicationContext(), isStoragePermissionGrantedRead(),isStoragePermissionGrantedWrite());
+                load.loadFromDevice(getApplicationContext(), isStoragePermissionGrantedRead());
                 finish();
             }
         }).start();

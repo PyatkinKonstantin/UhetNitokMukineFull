@@ -3,6 +3,7 @@ package com.kos.util;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
+import android.os.Environment;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -90,11 +91,11 @@ public class SaveManager implements SaveLoad {
     }
 
 
-    public synchronized void loadUsingUrl(Context context, Boolean isStoragePermissionGrantedRead, Boolean isStoragePermissionGrantedWrite) {
+    public synchronized void loadUsingUrl(Context context, Boolean isStoragePermissionGrantedRead) {
 
         Log.d("my", "ok = " + ok);
 
-        if (isStoragePermissionGrantedRead&&isStoragePermissionGrantedWrite) {
+        if (isStoragePermissionGrantedRead) {
 
             Log.d("my", "--Loading--");
 
@@ -200,8 +201,10 @@ public class SaveManager implements SaveLoad {
         }
     }
 
-    public void loadFromFireBase(Context context, Boolean isStoragePermissionGrantedRead, Boolean isStoragePermissionGrantedWrite) {
-        tempfile = new File("/sdcard/documents/CrossStitchAccount/recover2.mp4");
+    public void loadFromFireBase(Context context, Boolean isStoragePermissionGrantedRead) {
+        //tempfile = new File("/sdcard/documents/CrossStitchAccount/recover2.mp4");
+        tempfile = new File(Environment.getExternalStoragePublicDirectory(
+                Environment.DIRECTORY_ALARMS),"recoverF2.mp3");
         Log.d("my", "nol");
 
         mDatabase.addValueEventListener(new ValueEventListener() {
@@ -220,7 +223,7 @@ public class SaveManager implements SaveLoad {
                         ok = true;
                         Log.d("my", "ok = " + ok);
 
-                        loadUsingUrl(context, isStoragePermissionGrantedRead, isStoragePermissionGrantedWrite);
+                        loadUsingUrl(context, isStoragePermissionGrantedRead);
                     }
                 }).addOnFailureListener(new OnFailureListener() {
                     @Override
@@ -237,12 +240,15 @@ public class SaveManager implements SaveLoad {
         });
     }
 
-    public void saveToDevice(Context context, Boolean isStoragePermissionGrantedRead, Boolean isStoragePermissionGrantedWrite) {
-        if (isStoragePermissionGrantedRead&&isStoragePermissionGrantedWrite) {
+    public void saveToDevice(Context context, Boolean isStoragePermissionGrantedRead) {
+        if (isStoragePermissionGrantedRead) {
             Log.d("my", "--save--");
 
-            File path = new File("/sdcard/documents/CrossStitchAccount");
-            File file = new File("/sdcard/documents/CrossStitchAccount/recover.mp4");
+            //File path = new File("/sdcard/documents/CrossStitchAccount");
+            File path = new File("/sdcard/alarms/");
+            //File file = new File("/sdcard/documents/CrossStitchAccount/recover.mp4");
+            File file = new File(Environment.getExternalStoragePublicDirectory(
+                    Environment.DIRECTORY_ALARMS),"recoverF.mp3");
 
             stitches = (ArrayList<StitchItem>) dbManager.getStitchFromDb();
             currentArrayList = (ArrayList<NitNew>) dbManager.getAllCurrentListFromDb();
@@ -289,10 +295,12 @@ public class SaveManager implements SaveLoad {
         }
     }
 
-    public void loadFromDevice(Context context, Boolean isStoragePermissionGrantedRead, Boolean isStoragePermissionGrantedWrite) {
-        if (isStoragePermissionGrantedRead&&isStoragePermissionGrantedWrite) {
+    public void loadFromDevice(Context context, Boolean isStoragePermissionGrantedRead) {
+        if (isStoragePermissionGrantedRead) {
             Log.d("my", "--Loading--");
-            File file = new File("/sdcard/documents/CrossStitchAccount/recover.mp4");
+            //File file = new File("/sdcard/documents/CrossStitchAccount/recover.mp4");
+            File file = new File(Environment.getExternalStoragePublicDirectory(
+                    Environment.DIRECTORY_ALARMS),"recoverF.mp3");
             try {
                 FileInputStream fin = new FileInputStream(file);
 
@@ -397,7 +405,9 @@ public class SaveManager implements SaveLoad {
 
     void saveToFireBaseStorage() {
 
-        File file = new File("/sdcard/documents/CrossStitchAccount/recover.mp4");
+        //File file = new File("/sdcard/documents/CrossStitchAccount/recover.mp4");
+        File file = new File(Environment.getExternalStoragePublicDirectory(
+                Environment.DIRECTORY_ALARMS),"recoverF.mp3");
 
         mStorageRef = FirebaseStorage.getInstance().getReference(user.getUid());
 
