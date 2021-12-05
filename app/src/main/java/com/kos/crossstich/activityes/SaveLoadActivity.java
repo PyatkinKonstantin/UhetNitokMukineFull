@@ -11,6 +11,7 @@ import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -34,6 +35,10 @@ import com.squareup.picasso.Picasso;
 
 public class SaveLoadActivity extends AppCompatActivity {
     public static Dialog dialogLoading;
+    public static Dialog dialogSaving;
+    public static Dialog dialogLoad;
+    Button bt_dialog_load_no;
+    Button bt_dialog_load_yes;
     TextView tv_user_name;
     ImageView googleAccountLPicture;
 
@@ -47,17 +52,31 @@ public class SaveLoadActivity extends AppCompatActivity {
         setContentView(R.layout.activity_save_load);
         init();
     }
-    void init(){
-        if (Build.VERSION.SDK_INT <= 29) {
-            isStoragePermissionGrantedWrite();
-        }
 
-        if (Build.VERSION.SDK_INT >= 30) {
-            isStoragePermissionGrantedRead();
-        }
+    void init(){
+        dialogLoad = new Dialog(this);
+        dialogLoad.setContentView(R.layout.dialog_load);
+        bt_dialog_load_no = dialogLoad.findViewById(R.id.bt_dialog_load_no);
+        bt_dialog_load_yes = dialogLoad.findViewById(R.id.bt_dialog_load_yes);
+        bt_dialog_load_no.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialogLoad.dismiss();
+            }
+        });
+        bt_dialog_load_yes.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialogLoading.show();
+                SaveLoad load = new SaveManager(SaveLoadActivity.this);
+                load.loadFromFireBase(SaveLoadActivity.this);
+            }
+        });
 
         dialogLoading = new Dialog(this);
         dialogLoading.setContentView(R.layout.dialog_loading_in_progress);
+        dialogSaving = new Dialog(this);
+        dialogSaving.setContentView(R.layout.dialog_saving_in_progress);
         tv_user_name = findViewById(R.id.tv_user_name);
         googleAccountLPicture = findViewById(R.id.googleAccountLPicture);
 
@@ -140,7 +159,7 @@ public class SaveLoadActivity extends AppCompatActivity {
         finish();
     }
 
-    public boolean isStoragePermissionGrantedWrite() {
+    /*public boolean isStoragePermissionGrantedWrite() {
         if (Build.VERSION.SDK_INT >= 23) {
             if (checkSelfPermission(android.Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
                 return true;
@@ -151,9 +170,9 @@ public class SaveLoadActivity extends AppCompatActivity {
         } else { //permission is automatically granted on sdk<23 upon installation
             return true;
         }
-    }
+    }*/
 
-    public boolean isStoragePermissionGrantedRead() {
+    /*public boolean isStoragePermissionGrantedRead() {
         if (Build.VERSION.SDK_INT >= 23) {
             if (checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
                 return true;
@@ -165,37 +184,28 @@ public class SaveLoadActivity extends AppCompatActivity {
         } else { //permission is automatically granted on sdk<23 upon installation
             return true;
         }
-    }
-
+    }*/
 
     public void saveToDevic(View view) {
+        dialogSaving.show();
         SaveLoad save = new SaveManager(this);
-        save.saveToDevice(this, isStoragePermissionGrantedRead());
-        Toast.makeText(this, "Сохранено", Toast.LENGTH_SHORT).show();
+        save.saveToDevice(this);
     }
 
     public void loadFromDevic(View view) {
-        dialogLoading.show();
+        //dialogLoading.show();
         new Thread(new Runnable() {
             @Override
             public void run() {
                 SaveLoad load = new SaveManager(getApplicationContext());
-                load.loadFromDevice(getApplicationContext(), isStoragePermissionGrantedRead());
+                load.loadFromDevice(getApplicationContext());
                 finish();
             }
         }).start();
     }
 
-    public void saveToFBase(View view) {
-        SaveLoad save = new SaveManager(this);
-        save.saveToFireBase();
-        Toast.makeText(this, "Сохранено", Toast.LENGTH_SHORT).show();
-    }
-
     public void loadFromFBase(View view) {
-        dialogLoading.show();
-        SaveLoad load = new SaveManager(this);
-        load.loadFromFireBase(this,isStoragePermissionGrantedRead());
+        dialogLoad.show();
     }
 
     public void onClickLogoff(View view) {

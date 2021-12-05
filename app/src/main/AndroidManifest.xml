@@ -13,8 +13,8 @@
         android:roundIcon="@drawable/ic_launcher"
         android:supportsRtl="true"
         android:theme="@style/Theme.CrossStich">
-        <activity android:name=".activityes.SaveLoadActivity"></activity>
-        <activity android:name=".activityes.Authentication" />
+        <activity android:name=".activityes.SetupActivity"></activity>
+        <activity android:name=".activityes.SaveLoadActivity" />
         <activity android:name=".activityes.FabricActivity" />
         <activity android:name=".activityes.CurrentActivity" />
         <activity android:name=".activityes.ThreadsActivity" />

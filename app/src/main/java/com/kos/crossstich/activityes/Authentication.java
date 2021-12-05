@@ -25,9 +25,8 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
 import com.kos.crossstich.R;
 
-
-public class Authentication extends AppCompatActivity implements View.OnClickListener{
-    private static final String TAG = "GoogleActivity";
+public class Authentication extends AppCompatActivity{
+    /*private static final String TAG = "GoogleActivity";
     private static final int RC_SIGN_IN = 9001;
     private FirebaseAuth mAuth;
     private GoogleSignInClient mGoogleSignInClient;
@@ -155,5 +154,5 @@ public class Authentication extends AppCompatActivity implements View.OnClickLis
 
     private void updateUI(FirebaseUser user) {
 
-    }
+    }*/
 }

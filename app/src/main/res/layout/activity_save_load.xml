@@ -7,13 +7,14 @@
     tools:context=".activityes.SaveLoadActivity">
 
 
-
     <ImageView
         android:id="@+id/header_SaveLoad"
         android:layout_width="match_parent"
         android:layout_height="70dp"
+        android:layout_marginTop="0dp"
         android:foreground="@drawable/headerempty"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         tools:ignore="ContentDescription" />
@@ -55,16 +56,20 @@
 
     <Button
         android:id="@+id/bt_save"
-        android:layout_width="50dp"
+        style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+        android:layout_width="wrap_content"
         android:layout_height="60dp"
         android:layout_marginStart="15dp"
         android:layout_marginTop="15dp"
-        android:backgroundTint="#00000000"
+        android:fontFamily="@font/akadem"
         android:onClick="saveToDevic"
-        android:padding="9dp"
+        android:padding="15dp"
+        android:text="@string/save"
+        android:textSize="10sp"
+        app:cornerRadius="10dp"
         app:icon="@drawable/save__2_"
+        app:iconPadding="15dp"
         app:iconSize="30dp"
-        app:iconTint="#000000"
         app:layout_constraintStart_toStartOf="@+id/iv_save_back"
         app:layout_constraintTop_toTopOf="@+id/iv_save_back" />
 
@@ -83,77 +88,42 @@
 
     <Button
         android:id="@+id/readFromFireBase"
-        android:layout_width="50dp"
+        style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+        android:layout_width="wrap_content"
         android:layout_height="60dp"
         android:layout_marginTop="15dp"
         android:layout_marginEnd="15dp"
-        android:backgroundTint="#00000000"
+        android:fontFamily="@font/akadem"
         android:onClick="loadFromFBase"
         android:padding="8dp"
+        android:text="@string/load_from_cloud"
+        android:textSize="10sp"
+        app:cornerRadius="10dp"
         app:icon="@drawable/lfc"
+        app:iconGravity="end"
+        app:iconPadding="15dp"
         app:iconSize="35dp"
-        app:iconTint="#000000"
         app:layout_constraintEnd_toEndOf="@+id/iv_load_back"
         app:layout_constraintTop_toTopOf="@+id/iv_load_back" />
 
     <Button
         android:id="@+id/bt_load"
-        android:layout_width="50dp"
+        android:layout_width="wrap_content"
         android:layout_height="60dp"
         android:layout_marginTop="5dp"
         android:layout_marginEnd="15dp"
-        android:backgroundTint="#00000000"
+        style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+        app:cornerRadius="10dp"
         android:onClick="loadFromDevic"
+        android:text="@string/loadText"
+        android:textSize="10sp"
+        android:fontFamily="@font/akadem"
+        app:iconGravity="end"
         android:padding="8dp"
         app:icon="@drawable/mobile_phone"
         app:iconSize="35dp"
-        app:iconTint="#000000"
         app:layout_constraintEnd_toEndOf="@+id/iv_load_back"
         app:layout_constraintTop_toBottomOf="@+id/readFromFireBase" />
-
-    <TextView
-        android:id="@+id/textView4"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="20dp"
-        android:layout_marginEnd="20dp"
-        android:text="@string/save_to_device"
-        android:fontFamily="@font/akadem"
-        android:textSize="20sp"
-        app:layout_constraintBottom_toBottomOf="@+id/bt_save"
-        app:layout_constraintEnd_toEndOf="@+id/iv_save_back"
-        app:layout_constraintStart_toEndOf="@+id/bt_save"
-        app:layout_constraintTop_toTopOf="@+id/bt_save" />
-
-    <TextView
-        android:id="@+id/textView6"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="20dp"
-        android:layout_marginStart="20dp"
-        android:gravity="right"
-        android:text="@string/loadText"
-        android:fontFamily="@font/akadem"
-        android:textSize="20sp"
-        app:layout_constraintBottom_toBottomOf="@+id/bt_load"
-        app:layout_constraintEnd_toStartOf="@+id/bt_load"
-        app:layout_constraintStart_toStartOf="@+id/iv_load_back"
-        app:layout_constraintTop_toTopOf="@+id/bt_load" />
-
-    <TextView
-        android:id="@+id/textView7"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="20dp"
-        android:layout_marginEnd="20dp"
-        android:gravity="right"
-        android:text="@string/load_from_cloud"
-        android:fontFamily="@font/akadem"
-        android:textSize="20sp"
-        app:layout_constraintBottom_toBottomOf="@+id/readFromFireBase"
-        app:layout_constraintEnd_toStartOf="@+id/readFromFireBase"
-        app:layout_constraintStart_toStartOf="@+id/iv_load_back"
-        app:layout_constraintTop_toTopOf="@+id/readFromFireBase" />
 
     <Button
         android:id="@+id/bt_home_save_load"
@@ -162,10 +132,10 @@
         android:layout_marginEnd="10dp"
         android:layout_marginTop="5dp"
         android:padding="13dp"
-        android:backgroundTint="#00000000"
-        app:icon="@drawable/ba"
+        style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+        app:cornerRadius="10dp"
+        app:icon="@drawable/backfinal"
         app:iconSize="26dp"
-        app:iconTint="#000000"
         android:onClick="onClickHomeFromSaveLoad"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -186,38 +156,29 @@
 
     <Button
         android:id="@+id/googleAccountLPictureButton"
-        android:layout_width="51dp"
+        android:layout_width="52dp"
         android:layout_height="60dp"
         android:layout_marginStart="10dp"
         android:layout_marginTop="4dp"
-        android:backgroundTint="#00000000"
-        android:onClick="onClickHomeFromSaveLoad"
+        style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+        app:cornerRadius="5dp"
+        android:backgroundTint="@color/Kreinik4205"
         android:padding="13dp"
+        android:onClick="onClickLogoff"
         app:iconSize="26dp"
         app:iconTint="#000000"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <ImageView
-        android:id="@+id/googleAccountLPicturePod"
-        android:layout_width="36dp"
-        android:layout_height="34dp"
-        android:layout_marginStart="7dp"
-        android:layout_marginTop="13dp"
-        android:background="#A3A3A3"
-        app:layout_constraintStart_toStartOf="@+id/googleAccountLPictureButton"
-        app:layout_constraintTop_toTopOf="@+id/googleAccountLPictureButton"
-        tools:srcCompat="@tools:sample/avatars" />
-
-    <ImageView
         android:id="@+id/googleAccountLPicture"
-        android:layout_width="30dp"
-        android:layout_height="28dp"
+        android:layout_width="52dp"
+        android:layout_height="39dp"
         android:layout_marginStart="10dp"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="14dp"
         android:onClick="onClickLogoff"
-        app:layout_constraintStart_toStartOf="@+id/googleAccountLPictureButton"
-        app:layout_constraintTop_toTopOf="@+id/googleAccountLPictureButton"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
         tools:srcCompat="@tools:sample/avatars" />
 
     <!--<ImageView

@@ -52,6 +52,14 @@ public class SplashScreenActivity extends Activity {
     }
 
     void init() {
+        if (Build.VERSION.SDK_INT <= 29) {
+            isStoragePermissionGrantedWrite();
+        }
+
+        if (Build.VERSION.SDK_INT >= 30) {
+            isStoragePermissionGrantedRead();
+        }
+
         logo_anim = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.alfa_anim);
         logo = findViewById(R.id.logo);
         logo.startAnimation(logo_anim);
@@ -84,7 +92,6 @@ public class SplashScreenActivity extends Activity {
                     public void run() {
                         dbManager.openDb();
                         loadAllBase();
-                        loadOldFromApp();
                         dbManager.closeDb();
                         Intent mainIntent = new Intent(SplashScreenActivity.this, MainActivity.class);
                         SplashScreenActivity.this.startActivity(mainIntent);
@@ -3291,15 +3298,12 @@ public class SplashScreenActivity extends Activity {
         return col;
     }
 
-    public boolean isStoragePermissionGrantedRead() {
+    public boolean isStoragePermissionGrantedWrite() {
         if (Build.VERSION.SDK_INT >= 23) {
-            if (checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE)
-                    == PackageManager.PERMISSION_GRANTED) {
+            if (checkSelfPermission(android.Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
                 return true;
-
             } else {
-                ActivityCompat.requestPermissions(this,
-                        new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, 1);
+                ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 1);
                 return false;
             }
         } else { //permission is automatically granted on sdk<23 upon installation
@@ -3307,86 +3311,17 @@ public class SplashScreenActivity extends Activity {
         }
     }
 
-    public void loadOldFromApp() {
+    public boolean isStoragePermissionGrantedRead() {
+        if (Build.VERSION.SDK_INT >= 23) {
+            if (checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
+                return true;
 
-        ArrayList<Nit> recoveryNit = new ArrayList<>();
-        ArrayList<String> allCrossStich = new ArrayList<>();
-        ArrayList<Nit> allNits = new ArrayList<>();
-
-        String FILE_NAME = "saveCross";
-        Log.d("my", "tut");
-        File file = new File(getExternalFilesDir(null), FILE_NAME);
-
-        try {
-            FileInputStream fin = new FileInputStream(file);
-
-            ObjectInputStream ois = new ObjectInputStream(fin);
-            allCrossStich = (ArrayList<String>) ois.readObject();
-            allNits = (ArrayList<Nit>) ois.readObject();
-            recoveryNit = (ArrayList<Nit>) ois.readObject();
-            fin.close();
-            ois.close();
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-            Log.d("my", "--No file--");
-        } catch (IOException e) {
-            e.printStackTrace();
-            Log.d("my", "-IO error--");
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-            Log.d("my", "-Class Not Found--");
-        }
-        Log.d("my", "Stitch size = " + allCrossStich.size());
-        Log.d("my", "Current size = " + allNits.size());
-        Log.d("my", "Threads size = " + recoveryNit.size());
-
-        if (allCrossStich.size() > 0) {
-            for (String item : allCrossStich) {
-                dbManager.insertStitchToDb(item, "someText");
+            } else {
+                ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, 1);
+                return false;
             }
-        }
-
-        if (allNits.size() > 0) {
-            for (com.kos.crossstich.Nit it : allNits) {
-                String numberNit = it.numberNit;
-                String colorName = it.color;
-                String firm = it.firma;
-                String nameStitch = it.nameStich;
-                int colorNumber = dbManager.searchColorNumberFromDb(numberNit, firm);
-                double lengthCurrent = it.lengthCurrent;
-                dbManager.insertCurrenThreadToDb(numberNit, colorNumber, colorName, firm, nameStitch, lengthCurrent);
-            }
-        }
-
-        if (recoveryNit.size() > 0) {
-            for (int x = 0; x < 900; x++) {
-                String num = recoveryNit.get(x).numberNit;
-                String firm = recoveryNit.get(x).firma;
-                int id = dbManager.searchIdThreadFromDb(num, firm);
-                double lengthOstatok = recoveryNit.get(x).lengthOstatokt;
-                if (lengthOstatok > 0) {
-                    dbManager.updateThreadOstatokToDb(lengthOstatok, String.valueOf(id));
-                }
-            }
-            for (int x = 900; x < 1800; x++) {
-                String num = recoveryNit.get(x).numberNit;
-                String firm = recoveryNit.get(x).firma;
-                int id = dbManager.searchIdThreadFromDb(num, firm);
-                double lengthOstatok = recoveryNit.get(x).lengthOstatokt;
-                if (lengthOstatok > 0) {
-                    dbManager.updateThreadOstatokToDb(lengthOstatok, String.valueOf(id));
-                }
-            }
-            for (int x = 1800; x < recoveryNit.size(); x++) {
-                String num = recoveryNit.get(x).numberNit;
-                String firm = recoveryNit.get(x).firma;
-                int id = dbManager.searchIdThreadFromDb(num, firm);
-                double lengthOstatok = recoveryNit.get(x).lengthOstatokt;
-                if (lengthOstatok > 0) {
-                    dbManager.updateThreadOstatokToDb(lengthOstatok, String.valueOf(id));
-                }
-            }
+        } else { //permission is automatically granted on sdk<23 upon installation
+            return true;
         }
     }
-
 }

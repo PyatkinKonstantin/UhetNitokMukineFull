@@ -1,6 +1,7 @@
 package com.kos.crossstich.adapters;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -22,6 +23,7 @@ import static com.kos.crossstich.activityes.ThreadsActivity.dialogAddThread;
 import static com.kos.crossstich.activityes.ThreadsActivity.idToChange;
 import static com.kos.crossstich.activityes.ThreadsActivity.oldValue;
 import static com.kos.crossstich.activityes.ThreadsActivity.tv_dialogThreadName;
+import static com.kos.crossstich.db.Constants.PASM_6;
 
 public class ThreadsAdapter extends RecyclerView.Adapter<ThreadsAdapter.ThreadsHolder> {
     private ArrayList<NitNew> nitNewNewArrayList;
@@ -52,8 +54,10 @@ public class ThreadsAdapter extends RecyclerView.Adapter<ThreadsAdapter.ThreadsH
         holder.tv_itemThreadsActivityName.setText(nitNewNewArrayList.get(position).getColorName());
 
         //Остаток длина
-        Double length = nitNewNewArrayList.get(position).getLengthOstatok();
-        String lengthOstatok = String.valueOf(length);
+        Log.d("my", String.valueOf(PASM_6));
+        Double length = nitNewNewArrayList.get(position).getLengthOstatok()*PASM_6;
+        //String lengthOstatok = String.valueOf(length);
+        String lengthOstatok = String.format("%.2f", length);
         holder.tv_itemThreadsActivityLength.setText(lengthOstatok);
 
         if (length > 4) {
@@ -72,7 +76,7 @@ public class ThreadsAdapter extends RecyclerView.Adapter<ThreadsAdapter.ThreadsH
         }
 
         //Остаток длина пасма
-        Double pasm = length / 8.0;
+        Double pasm = length / 8.0 / PASM_6;
         String pasm1 = String.format("%.1f", pasm);
         String pasmLength = String.valueOf(pasm1);
         holder.tv_itemThreadsActivityPasm.setText(pasmLength);

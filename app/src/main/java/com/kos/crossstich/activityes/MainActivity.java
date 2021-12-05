@@ -29,7 +29,7 @@ import com.kos.util.SaveManager;
 import com.kos.util.Trial;
 
 import java.util.ArrayList;
-
+import static com.kos.crossstich.db.Constants.PASM_6;
 import static com.kos.crossstich.adapters.StitchAdapter.stitchName;
 
 //v2.1 Full //
@@ -129,6 +129,8 @@ public class MainActivity extends AppCompatActivity {
 
         stitches = new ArrayList<>();
         dbManager = new DbManager(this);
+        dbManager.openDb();
+        PASM_6 = dbManager.getPASM6();
 
         dialogAddStitch = new Dialog(this);
         dialogAddStitch.setContentView(R.layout.dialog_add_stitch);
@@ -217,5 +219,9 @@ public class MainActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
+    public void onclickSetup(View view) {
+        Intent intent = new Intent(this, SetupActivity.class);
+        startActivity(intent);
+    }
 }
 

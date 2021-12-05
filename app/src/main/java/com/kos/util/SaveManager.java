@@ -3,6 +3,7 @@ package com.kos.util;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
+import android.os.Environment;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -42,11 +43,11 @@ import java.net.URI;
 import java.net.URL;
 import java.util.ArrayList;
 
+import static com.kos.crossstich.activityes.SaveLoadActivity.dialogLoad;
 import static com.kos.crossstich.activityes.SaveLoadActivity.dialogLoading;
+import static com.kos.crossstich.activityes.SaveLoadActivity.dialogSaving;
 
 public class SaveManager implements SaveLoad {
-    File tempfile;
-    Boolean ok = false;
     String str = "";
     Uri upLoadUri;
     StorageReference mStorageRef;
@@ -64,143 +65,39 @@ public class SaveManager implements SaveLoad {
     FirebaseUser user = mAuth.getCurrentUser();
     DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference(user.getUid());
 
-    ArrayList<StitchItem> stitches;
-    ArrayList<NitNew> nitNewArrayList;
-    ArrayList<NitNew> currentArrayList;
-    ArrayList<FabricItem> fabric;
-    ArrayList<Cut> cuts;
-
     String STITCHES = "stitches";
     String USER_NAME = "user_name";
     String SAVE = "save";
     String CURRENT_THREADS = "current_threads";
     String ALL_THREADS = "all_threads";
     String FABRIC = "fabric";
-    String CUTS = "cuts"; //
+    String CUTS = "cuts";
 
-    public void reciveArrays() {
-        stitches = (ArrayList<StitchItem>) dbManager.getStitchFromDb();
-        nitNewArrayList = (ArrayList<NitNew>) dbManager.getAllThredsFromDb();
-        currentArrayList = (ArrayList<NitNew>) dbManager.getAllCurrentListFromDb();
-        fabric = (ArrayList<FabricItem>) dbManager.getFabricFromDb();
-        cuts = (ArrayList<Cut>) dbManager.getAllCutsFromDb();
-        Log.d("my", "reciveArrays complete. Size of base = " + nitNewArrayList.size());
-    }
+    public void loadUsingUrl(Context context, File tempfile) {
 
+        File dbOrig = new File("/data/data/com.kos.crossstich/databases/cross_stitch_db.db");
 
-    public synchronized void loadUsingUrl(Context context, Boolean isStoragePermissionGrantedRead) {
+        try {
+            FileInputStream fileInputStream = new FileInputStream(tempfile);
+            FileOutputStream fileOutputStream = new FileOutputStream(dbOrig);
 
-        Log.d("my", "ok = " + ok);
+            byte[] buffer = new byte[fileInputStream.available()];
+            fileInputStream.read(buffer, 0, buffer.length);
+            fileOutputStream.write(buffer, 0, buffer.length);
 
-        if (isStoragePermissionGrantedRead) {
-
-            Log.d("my", "--Loading--");
-
-            try {
-                Log.d("my", "five");
-                FileInputStream fin = new FileInputStream(tempfile);
-
-                ObjectInputStream ois = new ObjectInputStream(fin);
-
-                stitches = (ArrayList<StitchItem>) ois.readObject();
-                currentArrayList = (ArrayList<NitNew>) ois.readObject();
-                nitNewArrayList = (ArrayList<NitNew>) ois.readObject();
-                fabric = (ArrayList<FabricItem>) ois.readObject();
-                cuts = (ArrayList<Cut>) ois.readObject();
-                fin.close();
-                ois.close();
-            } catch (FileNotFoundException e) {
-                e.printStackTrace();
-                Log.d("my", "--No file--");
-            } catch (IOException e) {
-                e.printStackTrace();
-                Log.d("my", "-IO error--");
-            } catch (ClassNotFoundException e) {
-                e.printStackTrace();
-                Log.d("my", "-Class Not Found--");
-            }
-
-            dbManager.deleteAllStitchFromDb();
-            for (StitchItem item : stitches) {
-                dbManager.insertStitchToDb(item.getStitchName(), "someText");
-            }
-
-            dbManager.deleteAllCurrentTreadFromDb();
-            for (NitNew it : currentArrayList) {
-                String numberNit = it.getNumberNit();
-                String colorName = it.getColorName();
-                String firm = it.getFirm();
-                String nameStitch = it.getNameStitch();
-                int colorNumber = dbManager.searchColorNumberFromDb(numberNit, firm);
-                double lengthCurrent = it.getLengthCurrent();
-                dbManager.insertCurrenThreadToDb(numberNit, colorNumber, colorName, firm, nameStitch, lengthCurrent);
-            }
-
-
-            for (int x = 0; x < 900; x++) {
-                String num = nitNewArrayList.get(x).getNumberNit();
-                String firm = nitNewArrayList.get(x).getFirm();
-                int id = dbManager.searchIdThreadFromDb(num, firm);
-                double lengthOstatok = nitNewArrayList.get(x).getLengthOstatok();
-                if (lengthOstatok > 0) {
-                    dbManager.updateThreadOstatokToDb(lengthOstatok, String.valueOf(id));
-                }
-            }
-            for (int x = 900; x < 1800; x++) {
-                String num = nitNewArrayList.get(x).getNumberNit();
-                String firm = nitNewArrayList.get(x).getFirm();
-                int id = dbManager.searchIdThreadFromDb(num, firm);
-                double lengthOstatok = nitNewArrayList.get(x).getLengthOstatok();
-                if (lengthOstatok > 0) {
-                    dbManager.updateThreadOstatokToDb(lengthOstatok, String.valueOf(id));
-                }
-            }
-            for (int x = 1800; x < nitNewArrayList.size(); x++) {
-                String num = nitNewArrayList.get(x).getNumberNit();
-                String firm = nitNewArrayList.get(x).getFirm();
-                int id = dbManager.searchIdThreadFromDb(num, firm);
-                double lengthOstatok = nitNewArrayList.get(x).getLengthOstatok();
-                if (lengthOstatok > 0) {
-                    dbManager.updateThreadOstatokToDb(lengthOstatok, String.valueOf(id));
-                }
-            }
-
-            dbManager.deleteAllFabricFromDb();
-            for (FabricItem it : fabric) {
-                String nameFabric = it.getNameFabric();
-                String firmFabric = it.getFirmFabric();
-                String articulFabric = it.getArticulFabric();
-                String kauntFabric = it.getKauntFabric();
-                String colorFabric = it.getColorFabric();
-                String myNumberFabric = it.getMyNumberFabric();
-                dbManager.insertFabricToDb(firmFabric, nameFabric, articulFabric, kauntFabric, colorFabric, myNumberFabric);
-            }
-
-            dbManager.deleteAllCutsFromDb();
-            for (Cut it : cuts) {
-                int idCut = it.getIdCut();
-                String nameFabricCut = it.getNameFabricCut();
-                String firmFabricCut = it.getFirmFabricCut();
-                String articul = it.getArticul();
-                int lengthCut = it.getLengthCut();
-                int widthCut = it.getWidthCut();
-                dbManager.insertCutToDbLoad(idCut, nameFabricCut, firmFabricCut, articul, lengthCut, widthCut);
-            }
-            Log.d("my", "Stitch size = " + stitches.size());
-            Log.d("my", "Current size = " + currentArrayList.size());
-            Log.d("my", "Threads size = " + nitNewArrayList.size());
-            Log.d("my", "fabric size = " + fabric.size());
-            Log.d("my", "cuts size = " + cuts.size());
-            Log.d("my", "--Load ok--");
-            dialogLoading.dismiss();
-            Toast.makeText(context, context.getResources().getText(R.string.loaded), Toast.LENGTH_SHORT).show();
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
         }
-
-
+        dialogLoading.dismiss();
+        dialogLoad.dismiss();
+        Toast.makeText(context, context.getResources().getText(R.string.loaded), Toast.LENGTH_SHORT).show();
     }
 
-    public void loadFromFireBase(Context context, Boolean isStoragePermissionGrantedRead) {
-        tempfile = new File("/sdcard/documents/CrossStitchAccount/recover2.mp4");
+    public void loadFromFireBase(Context context) {
+
+        File tempfile = new File("/sdcard/download/Accounting/cross_stitch_db_obl.db");
         Log.d("my", "nol");
 
         mDatabase.addValueEventListener(new ValueEventListener() {
@@ -208,7 +105,7 @@ public class SaveManager implements SaveLoad {
             public void onDataChange(DataSnapshot dataSnapshot) {
                 str = dataSnapshot.child(SAVE).getValue(String.class);
                 Log.d("my", "ras");
-                Log.d("my", str);
+               // Log.d("my", str);
                 Log.d("my", "dva");
                 httpReference = FirebaseStorage.getInstance().getReferenceFromUrl(str);
                 Log.d("my", "tri");
@@ -216,15 +113,13 @@ public class SaveManager implements SaveLoad {
                     @Override
                     public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
                         Log.d("my", "chetire");
-                        ok = true;
-                        Log.d("my", "ok = " + ok);
 
-                        loadUsingUrl(context, isStoragePermissionGrantedRead);
+                        loadUsingUrl(context, tempfile);
                     }
                 }).addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
-
+                        Toast.makeText(context, "Ошибка сети. Повторите попытку загрузки.", Toast.LENGTH_LONG).show();
                     }
                 });
             }
@@ -236,173 +131,42 @@ public class SaveManager implements SaveLoad {
         });
     }
 
-    public void saveToDevice(Context context, Boolean isStoragePermissionGrantedRead) {
-        if (isStoragePermissionGrantedRead) {
-            Log.d("my", "--save--");
+    public void saveToDevice(Context context) {
 
-            File path = new File("/sdcard/documents/CrossStitchAccount");
-            File file = new File("/sdcard/documents/CrossStitchAccount/recover.mp4");
+        File dbOrig = new File("/data/data/com.kos.crossstich/databases/cross_stitch_db.db");
+        File dbCopy = new File("/sdcard/download/Accounting/cross_stitch_db.db");
+        File path = new File("/sdcard/download/Accounting");
 
-            stitches = (ArrayList<StitchItem>) dbManager.getStitchFromDb();
-            currentArrayList = (ArrayList<NitNew>) dbManager.getAllCurrentListFromDb();
-            nitNewArrayList = (ArrayList<NitNew>) dbManager.getAllThredsFromDb();
-            fabric = (ArrayList<FabricItem>) dbManager.getFabricFromDb();
-            cuts = (ArrayList<Cut>) dbManager.getAllCutsFromDb();
-
-            Log.d("my", "Stitch size = " + stitches.size());
-            Log.d("my", "Current size = " + currentArrayList.size());
-            Log.d("my", "Threads size = " + nitNewArrayList.size());
-            Log.d("my", "FabricItem size = " + fabric.size());
-            Log.d("my", "cuts size = " + cuts.size());
-
-
-            try {
-                if (!path.exists()) {
-                    path.mkdirs();
-                }
-                FileOutputStream fos = new FileOutputStream(file);
-
-                ObjectOutputStream oos = new ObjectOutputStream(fos);
-                oos.writeObject(stitches);
-                oos.writeObject(currentArrayList);
-                oos.writeObject(nitNewArrayList);
-                oos.writeObject(fabric);
-                oos.writeObject(cuts);
-                fos.close();
-                oos.close();
-            } catch (FileNotFoundException e) {
-                e.printStackTrace();
-                Log.d("my", "--No file--");
-            } catch (IOException e) {
-                e.printStackTrace();
-                Log.d("my", "-IO error--");
-            }
-
-            //Toast.makeText(context, context.getResources().getText(R.string.recovery_copy), Toast.LENGTH_SHORT).show();
-
-            Log.d("my", "--saved ok--");
-
-
-            saveToFireBaseStorage();
-
+        if (!path.exists()) {
+            path.mkdirs();
         }
-    }
+        try {
+            FileInputStream fileInputStream = new FileInputStream(dbOrig);
+            FileOutputStream fileOutputStream = new FileOutputStream(dbCopy);
 
-    public void loadFromDevice(Context context, Boolean isStoragePermissionGrantedRead) {
-        if (isStoragePermissionGrantedRead) {
-            Log.d("my", "--Loading--");
-            File file = new File("/sdcard/documents/CrossStitchAccount/recover.mp4");
-            try {
-                FileInputStream fin = new FileInputStream(file);
+            byte[] buffer = new byte[fileInputStream.available()];
+            fileInputStream.read(buffer, 0, buffer.length);
+            fileOutputStream.write(buffer, 0, buffer.length);
 
-                ObjectInputStream ois = new ObjectInputStream(fin);
-                stitches = (ArrayList<StitchItem>) ois.readObject();
-                currentArrayList = (ArrayList<NitNew>) ois.readObject();
-                nitNewArrayList = (ArrayList<NitNew>) ois.readObject();
-                fabric = (ArrayList<FabricItem>) ois.readObject();
-                cuts = (ArrayList<Cut>) ois.readObject();
-                fin.close();
-                ois.close();
-            } catch (FileNotFoundException e) {
-                e.printStackTrace();
-                Log.d("my", "--No file--");
-            } catch (IOException e) {
-                e.printStackTrace();
-                Log.d("my", "-IO error--");
-            } catch (ClassNotFoundException e) {
-                e.printStackTrace();
-                Log.d("my", "-Class Not Found--");
-            }
-
-            dbManager.deleteAllStitchFromDb();
-            for (StitchItem item : stitches) {
-                dbManager.insertStitchToDb(item.getStitchName(), "someText");
-            }
-
-            dbManager.deleteAllCurrentTreadFromDb();
-            for (NitNew it : currentArrayList) {
-                String numberNit = it.getNumberNit();
-                String colorName = it.getColorName();
-                String firm = it.getFirm();
-                String nameStitch = it.getNameStitch();
-                int colorNumber = dbManager.searchColorNumberFromDb(numberNit, firm);
-                double lengthCurrent = it.getLengthCurrent();
-                dbManager.insertCurrenThreadToDb(numberNit, colorNumber, colorName, firm, nameStitch, lengthCurrent);
-            }
-
-
-            for (int x = 0; x < 900; x++) {
-                String num = nitNewArrayList.get(x).getNumberNit();
-                String firm = nitNewArrayList.get(x).getFirm();
-                int id = dbManager.searchIdThreadFromDb(num, firm);
-                double lengthOstatok = nitNewArrayList.get(x).getLengthOstatok();
-                if (lengthOstatok > 0) {
-                    dbManager.updateThreadOstatokToDb(lengthOstatok, String.valueOf(id));
-                }
-            }
-            for (int x = 900; x < 1800; x++) {
-                String num = nitNewArrayList.get(x).getNumberNit();
-                String firm = nitNewArrayList.get(x).getFirm();
-                int id = dbManager.searchIdThreadFromDb(num, firm);
-                double lengthOstatok = nitNewArrayList.get(x).getLengthOstatok();
-                if (lengthOstatok > 0) {
-                    dbManager.updateThreadOstatokToDb(lengthOstatok, String.valueOf(id));
-                }
-            }
-            for (int x = 1800; x < nitNewArrayList.size(); x++) {
-                String num = nitNewArrayList.get(x).getNumberNit();
-                String firm = nitNewArrayList.get(x).getFirm();
-                int id = dbManager.searchIdThreadFromDb(num, firm);
-                double lengthOstatok = nitNewArrayList.get(x).getLengthOstatok();
-                if (lengthOstatok > 0) {
-                    dbManager.updateThreadOstatokToDb(lengthOstatok, String.valueOf(id));
-                }
-            }
-
-            dbManager.deleteAllFabricFromDb();
-            for (FabricItem it : fabric) {
-                String nameFabric = it.getNameFabric();
-                String firmFabric = it.getFirmFabric();
-                String articulFabric = it.getArticulFabric();
-                String kauntFabric = it.getKauntFabric();
-                String colorFabric = it.getColorFabric();
-                String myNumberFabric = it.getMyNumberFabric();
-                dbManager.insertFabricToDb(firmFabric, nameFabric, articulFabric, kauntFabric, colorFabric, myNumberFabric);
-            }
-
-            dbManager.deleteAllCutsFromDb();
-            for (Cut it : cuts) {
-                int idCut = it.getIdCut();
-                String nameFabricCut = it.getNameFabricCut();
-                String firmFabricCut = it.getFirmFabricCut();
-                String articul = it.getArticul();
-                int lengthCut = it.getLengthCut();
-                int widthCut = it.getWidthCut();
-                dbManager.insertCutToDbLoad(idCut, nameFabricCut, firmFabricCut, articul, lengthCut, widthCut);
-            }
-            Log.d("my", "Stitch size = " + stitches.size());
-            Log.d("my", "Current size = " + currentArrayList.size());
-            Log.d("my", "Threads size = " + nitNewArrayList.size());
-            Log.d("my", "fabric size = " + fabric.size());
-            Log.d("my", "cuts size = " + cuts.size());
-            Log.d("my", "--Load ok--");
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
         }
-    }
 
-    @Override
-    public void saveToFireBase() {
+        saveToFireBaseStorage();
 
     }
 
     void saveToFireBaseStorage() {
 
-        File file = new File("/sdcard/documents/CrossStitchAccount/recover.mp4");
+        File dbCopy = new File("/sdcard/download/Accounting/cross_stitch_db.db");
 
         mStorageRef = FirebaseStorage.getInstance().getReference(user.getUid());
 
         final StorageReference mRef = mStorageRef.child(user.getUid() + "save");
 
-        UploadTask uploadTask = mRef.putFile(Uri.fromFile(file));
+        UploadTask uploadTask = mRef.putFile(Uri.fromFile(dbCopy));
 
         Task<Uri> task = uploadTask.continueWithTask(new Continuation<UploadTask.TaskSnapshot, Task<Uri>>() {
             @Override
@@ -417,8 +181,35 @@ public class SaveManager implements SaveLoad {
                 mDatabase.child(SAVE).setValue(str);
                 //Log.d("my", upLoadUri.toString());
                 mDatabase.child(SAVE).setValue(upLoadUri.toString());
+                Toast.makeText(context, "Сохранено", Toast.LENGTH_SHORT).show();
+                dialogSaving.dismiss();
+            }
+
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Toast.makeText(context, "Ошибка сети. Повторите попытку сохранения", Toast.LENGTH_LONG).show();
             }
         });
     }
 
+    public void loadFromDevice(Context context) {
+
+        File dbOrig = new File("/data/data/com.kos.crossstich/databases/cross_stitch_db.db");
+        File dbCopy = new File("/sdcard/download/Accounting/cross_stitch_db.db");
+
+        try {
+            FileInputStream fileInputStream = new FileInputStream(dbCopy);
+            FileOutputStream fileOutputStream = new FileOutputStream(dbOrig);
+
+            byte[] buffer = new byte[fileInputStream.available()];
+            fileInputStream.read(buffer, 0, buffer.length);
+            fileOutputStream.write(buffer, 0, buffer.length);
+
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 }
