@@ -52,6 +52,7 @@ public class SaveLoadActivity extends AppCompatActivity {
         setContentView(R.layout.activity_save_load);
         init();
     }
+
     void init(){
         dialogLoad = new Dialog(this);
         dialogLoad.setContentView(R.layout.dialog_load);
@@ -158,7 +159,7 @@ public class SaveLoadActivity extends AppCompatActivity {
         finish();
     }
 
-    public boolean isStoragePermissionGrantedWrite() {
+    /*public boolean isStoragePermissionGrantedWrite() {
         if (Build.VERSION.SDK_INT >= 23) {
             if (checkSelfPermission(android.Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
                 return true;
@@ -169,9 +170,9 @@ public class SaveLoadActivity extends AppCompatActivity {
         } else { //permission is automatically granted on sdk<23 upon installation
             return true;
         }
-    }
+    }*/
 
-    public boolean isStoragePermissionGrantedRead() {
+    /*public boolean isStoragePermissionGrantedRead() {
         if (Build.VERSION.SDK_INT >= 23) {
             if (checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
                 return true;
@@ -183,8 +184,7 @@ public class SaveLoadActivity extends AppCompatActivity {
         } else { //permission is automatically granted on sdk<23 upon installation
             return true;
         }
-    }
-
+    }*/
 
     public void saveToDevic(View view) {
         dialogSaving.show();
@@ -193,7 +193,7 @@ public class SaveLoadActivity extends AppCompatActivity {
     }
 
     public void loadFromDevic(View view) {
-        dialogLoading.show();
+        //dialogLoading.show();
         new Thread(new Runnable() {
             @Override
             public void run() {
