@@ -52,6 +52,14 @@ public class SplashScreenActivity extends Activity {
     }
 
     void init() {
+        if (Build.VERSION.SDK_INT <= 29) {
+            isStoragePermissionGrantedWrite();
+        }
+
+        if (Build.VERSION.SDK_INT >= 30) {
+            isStoragePermissionGrantedRead();
+        }
+
         logo_anim = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.alfa_anim);
         logo = findViewById(R.id.logo);
         logo.startAnimation(logo_anim);
